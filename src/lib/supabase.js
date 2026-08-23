@@ -4,4 +4,4 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://twmpcuomjllixn
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3bXBjdW9tamxsaXhuaW54bGR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0MzM3MzgsImV4cCI6MjEwMjAwOTczOH0.FIlCEPbuKJ4U3rNJej-4yQrYe9CwoIFfT7G8Px9iUX4';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-export const API_BASE = 'http://localhost:5000';
+export const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
