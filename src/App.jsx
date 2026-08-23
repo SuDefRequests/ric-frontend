@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { HomePage } from './pages/HomePage';
@@ -9,7 +9,15 @@ import { HackathonPage } from './pages/HackathonPage';
 import { AccountPage } from './pages/AccountPage';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('home');
+  // Initialize state from localStorage (defaults to 'home' on first visit)
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem('ric_active_tab') || 'home';
+  });
+
+  // Sync tab selection changes with localStorage
+  useEffect(() => {
+    localStorage.setItem('ric_active_tab', activeTab);
+  }, [activeTab]);
 
   return (
     <AuthProvider>
@@ -26,31 +34,31 @@ export default function App() {
         </main>
 
         <footer className="w-full text-center py-8 border-t border-neutral-200 bg-[#fffdfb] space-y-2">
-        <p className="text-sm md:text-base text-neutral-700 font-bold tracking-tight">
-          Computer Engineering Department, <span className="text-maroon">SE</span>
-        </p>
-        <p className="text-xs md:text-sm text-neutral-600 font-medium">
-          Creation by{' '}
-          <span className="font-extrabold text-neutral-900">Flowstate Labs</span> —{' '}
-          <a
-            href="https://www.linkedin.com/in/suraj-prajapati-a30b83255/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-maroon hover:underline font-bold transition-colors"
-          >
-            Suraj Prajapati
-          </a>{' '}
-          &amp;{' '}
-          <a
-            href="https://www.linkedin.com/in/kunal-patil-38a36337a/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-maroon hover:underline font-bold transition-colors"
-          >
-            Kunal Patil
-          </a>
-        </p>
-      </footer>
+          <p className="text-sm md:text-base text-neutral-700 font-bold tracking-tight">
+            Computer Engineering Department, <span className="text-maroon">SE</span>
+          </p>
+          <p className="text-xs md:text-sm text-neutral-600 font-medium">
+            Creation by{' '}
+            <span className="font-extrabold text-neutral-900">Flowstate Labs</span> —{' '}
+            <a
+              href="https://www.linkedin.com/in/suraj-prajapati-a30b83255/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-maroon hover:underline font-bold transition-colors"
+            >
+              Suraj Prajapati
+            </a>{' '}
+            &amp;{' '}
+            <a
+              href="https://www.linkedin.com/in/kunal-patil-38a36337a/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-maroon hover:underline font-bold transition-colors"
+            >
+              Kunal Patil
+            </a>
+          </p>
+        </footer>
       </div>
     </AuthProvider>
   );
