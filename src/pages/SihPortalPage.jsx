@@ -234,6 +234,15 @@ export const SihPortalPage = () => {
                     >
                         SIH PPT Format ↗
                     </a>
+                    <a
+                        href="/sih-problem-statements.pdf"
+                        download="SIH_Problem_Statements.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-maroon text-white text-xs md:text-sm font-bold rounded-lg shadow-sm hover:opacity-90 transition-opacity"
+                    >
+                        Download Problem Statements (PDF)
+                    </a>
                 </div>
             </div>
 
@@ -486,7 +495,7 @@ export const SihPortalPage = () => {
                                 {({ loading }) => (loading ? 'Generating PDF...' : '📄 Download Official PDF Slip')}
                             </PDFDownloadLink>
                         ) : null}
-                        
+
                     </div>
                 </div>
             </form>

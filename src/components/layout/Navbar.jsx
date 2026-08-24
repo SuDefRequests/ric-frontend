@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Menu, X, LogIn, LogOut, User, ShieldCheck, ChevronDown } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import sansthaLogo from '/sanstha-logo.png';
 
 export const Navbar = ({ activeTab, setActiveTab }) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -38,20 +39,20 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
 
   return (
     <header
-      className={`w-full z-40 transition-colors duration-300 ${
-        isHome
+      className={`w-full z-40 transition-colors duration-300 ${isHome
           ? 'lg:absolute top-0 left-0 bg-neutral-950/90 lg:bg-transparent text-white'
           : 'relative bg-[#fffdfb] text-neutral-900 border-b border-neutral-200 shadow-sm'
-      }`}
+        }`}
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 pt-4 lg:pt-6 pb-3">
-        
+
         {/* Top Centered Section: Official College Header Structure */}
         <div
           onClick={() => handleNavClick('home')}
           className="cursor-pointer text-center flex flex-col items-center justify-center select-none mb-3 lg:mb-5"
         >
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+          <div className="flex flex-row items-center justify-between sm:justify-center gap-2 sm:gap-4 md:gap-6 w-full max-w-5xl px-2">
+            {/* Left: College Logo */}
             <img
               src="/logo.png"
               alt="LoGMIEER Logo"
@@ -59,31 +60,39 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
               className="h-10 sm:h-12 md:h-16 w-auto object-contain drop-shadow-sm shrink-0"
             />
 
-            <div className="flex flex-col items-center">
+            {/* Center: Official Typography */}
+            <div className="flex flex-col items-center text-center">
               {/* Sanstha Name */}
-              <span className={`text-[8.5px] sm:text-[11px] md:text-xs font-semibold tracking-wider uppercase leading-tight ${
-                isHome ? 'text-blue-200' : 'text-blue-800'
-              }`}>
-                Kr. Vasantrao Narayanrao Naik Shikshan Prasarak Sanstha’s
-              </span>
-
-              {/* College Name */}
-              <span className="text-[11px] sm:text-[15px] md:text-[18px] font-black text-[#d91e2b] uppercase tracking-tight leading-tight mt-0.5 font-poppins text-center px-2">
-                Loknete Gopinathji Munde Institute of Engineering Education & Research
-              </span>
-
-              {/* Department Hierarchy Badges */}
-              <div className="flex flex-col items-center mt-1.5 space-y-1">
-                <span className="text-[9px] sm:text-[11px] font-bold text-white uppercase tracking-wider bg-maroon px-3 py-0.5 rounded shadow-sm text-center">
-                  Presented by Department of Computer Engineering
-                </span>
-                <span className={`text-[8px] sm:text-[10px] font-medium tracking-wide text-center px-2 ${
-                  isHome ? 'text-neutral-200' : 'text-neutral-600'
+              <span className={`text-[8.5px] sm:text-[11px] md:text-xs font-semibold tracking-wider uppercase leading-tight ${isHome ? 'text-blue-200' : 'text-[#1e3a8a]'
                 }`}>
-                  In Association with Dept. of Information Technology & Artificial Intelligence & Machine Learning
-                </span>
-              </div>
+                Krantiveer Vasantrao Narayanrao Naik Shikshan Prasarak Sanstha's
+              </span>
+
+              {/* College Name Main Title */}
+         {/* Main Title */}
+<span className="text-[12px] sm:text-[16px] md:text-[20px] font-black text-[#b91c1c] uppercase tracking-tight leading-tight mt-0.5 font-poppins">
+  LOKNETE GOPINATHJI MUNDE
+</span>
+
+{/* College Subtitle */}
+<span className="text-[9px] sm:text-[12px] md:text-[13px] font-bold text-[#b91c1c] uppercase tracking-tight leading-tight">
+  Institute of Engineering Education &amp; Research
+</span>
+
+              {/* Accreditation Tagline */}
+              <span className={`text-[7.5px] sm:text-[9.5px] md:text-[11px] font-semibold tracking-wide mt-0.5 ${isHome ? 'text-neutral-300' : 'text-[#1e3a8a]'
+                }`}>
+                Approved by AICTE, Accredited &apos;B&apos; Grade By NAAC
+              </span>
             </div>
+
+            {/* Right: Sanstha Crest Logo */}
+            <img
+              src={sansthaLogo}
+              alt="Sanstha Logo"
+              onError={(e) => { e.target.style.display = 'none'; }}
+              className="h-10 sm:h-12 md:h-16 w-auto object-contain drop-shadow-sm shrink-0"
+            />
           </div>
         </div>
 
@@ -98,15 +107,14 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
                 <button
                   key={item.key}
                   onClick={() => handleNavClick(item.key)}
-                  className={`transition pb-1 whitespace-nowrap cursor-pointer ${
-                    isActive
+                  className={`transition pb-1 whitespace-nowrap cursor-pointer ${isActive
                       ? isHome
                         ? 'text-white border-b-2 border-white font-bold'
                         : 'text-maroon border-b-2 border-maroon font-bold'
                       : isHome
-                      ? 'text-neutral-300 hover:text-white'
-                      : 'text-neutral-600 hover:text-maroon'
-                  }`}
+                        ? 'text-neutral-300 hover:text-white'
+                        : 'text-neutral-600 hover:text-maroon'
+                    }`}
                 >
                   {item.label}
                 </button>
@@ -121,11 +129,10 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
                 <button
                   type="button"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className={`flex items-center gap-2 py-1 px-3 rounded-xl border transition cursor-pointer text-left ${
-                    isHome
+                  className={`flex items-center gap-2 py-1 px-3 rounded-xl border transition cursor-pointer text-left ${isHome
                       ? 'bg-white/10 border-white/20 text-white hover:bg-white/20'
                       : 'bg-neutral-50 border-neutral-200 text-neutral-800 hover:bg-neutral-100'
-                  }`}
+                    }`}
                 >
                   <div className="w-6 h-6 rounded-full bg-maroon text-white flex items-center justify-center font-bold text-[10px]">
                     {profile?.full_name ? profile.full_name[0].toUpperCase() : user.email[0].toUpperCase()}
@@ -148,9 +155,8 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
 
                     <button
                       onClick={() => handleNavClick('account')}
-                      className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-left transition cursor-pointer ${
-                        activeTab === 'account' ? 'bg-maroon text-white' : 'hover:bg-neutral-100 text-neutral-700'
-                      }`}
+                      className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-left transition cursor-pointer ${activeTab === 'account' ? 'bg-maroon text-white' : 'hover:bg-neutral-100 text-neutral-700'
+                        }`}
                     >
                       <User className="w-4 h-4" />
                       Your Account Profile
@@ -219,9 +225,8 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
 
       {/* Mobile Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 bg-neutral-900 text-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col pt-6 px-6 lg:hidden ${
-          isMobileOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed top-0 right-0 h-full w-72 bg-neutral-900 text-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col pt-6 px-6 lg:hidden ${isMobileOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         <div className="flex justify-between items-center pb-4 border-b border-neutral-700 mb-6">
           <span className="font-bold text-sm tracking-wider uppercase text-neutral-300">Navigation</span>
@@ -235,9 +240,8 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
             <button
               key={item.key}
               onClick={() => handleNavClick(item.key)}
-              className={`text-sm font-semibold py-2 text-left transition cursor-pointer ${
-                activeTab === item.key ? 'text-white pl-2 border-l-2 border-maroon font-bold' : 'text-neutral-400 hover:text-white'
-              }`}
+              className={`text-sm font-semibold py-2 text-left transition cursor-pointer ${activeTab === item.key ? 'text-white pl-2 border-l-2 border-maroon font-bold' : 'text-neutral-400 hover:text-white'
+                }`}
             >
               {item.label}
             </button>
