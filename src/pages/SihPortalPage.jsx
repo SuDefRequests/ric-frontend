@@ -320,7 +320,7 @@ export const SihPortalPage = () => {
 
                     {/* Optional Mentor Details */}
                     <div className="mt-6 pt-5 border-t border-neutral-100">
-                        <span className="text-xs font-bold text-neutral-700 block mb-3">Internal College Mentor (Optional)</span>
+                        <span className="text-xs font-bold text-neutral-700 block mb-3">Internal College Mentor</span>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <input
                                 type="text"
@@ -415,7 +415,7 @@ export const SihPortalPage = () => {
                                         <input
                                             required
                                             type="text"
-                                            placeholder="Roll / Reg No"
+                                            placeholder="Roll no"
                                             value={member.rollNo}
                                             onChange={(e) => handleMemberChange(index, 'rollNo', e.target.value)}
                                             className="w-full text-xs p-2 rounded-lg border border-neutral-300 bg-white"
