@@ -190,7 +190,7 @@ export const SihPdfDocument = ({ data = {} }) => {
 
         {/* 3. Team Members Table */}
         <Text style={styles.sectionHeader}>
-          3. Team Members (6 Members including Leader; ≥1 Female Mandatory)
+          3. Team Members (6 Members including Leader; atleast 1 Female Mandatory)
         </Text>
         <View style={styles.table}>
           <View style={styles.tableRow}>
