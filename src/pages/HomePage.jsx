@@ -62,14 +62,15 @@ export const HomePage = ({ setActiveTab }) => {
       {/* Full-Viewport Hero with dynamic top spacing */}
      {/* Full-Viewport Hero: Centered and fitted cleanly for mobile + desktop */}
       <section className="relative w-full min-h-[calc(100vh-140px)] lg:min-h-screen flex flex-col justify-center items-center text-center bg-neutral-950 px-4 pt-4 pb-10 sm:py-16">
-        
-        {/* Background Image Slideshow */}
+  {/* Background Image Slideshow */}
         <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
           {finalSlides.map((src, index) => (
             <img
               key={index}
               src={src}
               alt="Club Background"
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchPriority={index === 0 ? "high" : "low"}
               onError={(e) => {
                 e.target.style.display = 'none';
               }}
