@@ -1,27 +1,45 @@
 import { useState, useEffect } from 'react';
 import { UserCheck, Users, FileText, ArrowRight } from 'lucide-react';
 
-// Automatically import all images placed in src/assets/slideshow/ (if using src)
-// or fallback gracefully to public assets
-const importedSlideImages = import.meta.glob('/src/assets/slideshow/*.{jpg,jpeg,png,webp}', {
-  eager: true,
-  import: 'default',
-});
-
-const autoSlides = Object.values(importedSlideImages);
 const defaultSlides = ['/assets/a.jpg', '/assets/b.jpg'];
-const finalSlides = autoSlides.length > 0 ? autoSlides : defaultSlides;
+
+// Lazy dynamic glob import (non-blocking, resolves in the background)
+const slideGlob = import.meta.glob('/src/assets/slideshow/*.{jpg,jpeg,png,webp}');
 
 export const HomePage = ({ setActiveTab }) => {
+  const [slides, setSlides] = useState(defaultSlides);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // 1. Resolve slideshow images asynchronously in the background
   useEffect(() => {
-    if (finalSlides.length <= 1) return;
+    const loadSlides = async () => {
+      const globKeys = Object.keys(slideGlob);
+      if (globKeys.length === 0) return;
+
+      try {
+        const modules = await Promise.all(
+          Object.values(slideGlob).map((importer) => importer())
+        );
+        const resolvedUrls = modules.map((mod) => mod.default || mod);
+        if (resolvedUrls.length > 0) {
+          setSlides(resolvedUrls);
+        }
+      } catch (err) {
+        console.error('Failed to load dynamic slides, using defaults:', err);
+      }
+    };
+
+    loadSlides();
+  }, []);
+
+  // 2. Carousel rotation interval
+  useEffect(() => {
+    if (slides.length <= 1) return;
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % finalSlides.length);
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 4500);
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   const quickGuides = [
     {
@@ -58,13 +76,12 @@ export const HomePage = ({ setActiveTab }) => {
 
   return (
     <div className="w-full overflow-x-hidden">
-      
-      {/* Full-Viewport Hero with dynamic top spacing */}
-     {/* Full-Viewport Hero: Centered and fitted cleanly for mobile + desktop */}
+      {/* Full-Viewport Hero */}
       <section className="relative w-full min-h-[calc(100vh-140px)] lg:min-h-screen flex flex-col justify-center items-center text-center bg-neutral-950 px-4 pt-4 pb-10 sm:py-16">
-  {/* Background Image Slideshow */}
+        
+        {/* Background Image Slideshow */}
         <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-          {finalSlides.map((src, index) => (
+          {slides.map((src, index) => (
             <img
               key={index}
               src={src}
@@ -82,7 +99,7 @@ export const HomePage = ({ setActiveTab }) => {
           <div className="absolute inset-0 bg-black/75 z-10" />
         </div>
 
-        {/* Foreground Content - Centered in viewport */}
+        {/* Foreground Content */}
         <div className="relative z-20 px-4 max-w-4xl mx-auto flex flex-col items-center justify-center space-y-4 sm:space-y-6">
           <h2 className="text-3xl sm:text-5xl md:text-7xl font-black text-white tracking-tight drop-shadow-2xl font-poppins leading-tight">
             Collaborate. Innovate. Dominate.
@@ -169,7 +186,6 @@ export const HomePage = ({ setActiveTab }) => {
           </div>
         </div>
       </section>
-
     </div>
   );
 };
