@@ -28,6 +28,7 @@ export const Navbar = ({ activeTab, setActiveTab }) => {
     { key: 'teams', label: 'Registered Teams' },
     { key: 'comps', label: 'Live Hackathons' },
     { key: 'sih', label: 'SIH 2026 Portal' },
+    { key: 'aavishkar', label: 'Aavishkar 2026' },
     { key: 'account', label: 'My Account' },
   ];
 

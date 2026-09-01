@@ -7,6 +7,7 @@ import { TeamsPage } from './pages/TeamsPage';
 import { SihPortalPage } from './pages/SihPortalPage';
 import { HackathonPage } from './pages/HackathonPage';
 import { AccountPage } from './pages/AccountPage';
+import { AavishkarPortal } from './pages/AavishkarPortal';
 
 export default function App() {
   // Initialize state from localStorage (defaults to 'home' on first visit)
@@ -31,6 +32,7 @@ export default function App() {
           {activeTab === 'sih' && <SihPortalPage />}
           {activeTab === 'comps' && <HackathonPage />}
           {activeTab === 'account' && <AccountPage setActiveTab={setActiveTab} />}
+          {activeTab === 'aavishkar' && <AavishkarPortal setActiveTab={setActiveTab} />}
         </main>
 
         <footer className="w-full text-center py-8 border-t border-neutral-200 bg-[#fffdfb] space-y-2">
