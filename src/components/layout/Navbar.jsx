@@ -237,7 +237,7 @@ const navItems = [
       )}
 
       {/* Mobile Drawer */}
-      <div
+     <div
         className={`fixed top-0 right-0 h-full w-72 bg-neutral-900 text-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col pt-6 px-6 lg:hidden ${
           isMobileOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
@@ -261,16 +261,41 @@ const navItems = [
               {item.label}
             </button>
           ))}
+
+          {/* Add My Account link specifically for mobile */}
+          <button
+            onClick={() => handleNavClick('account')}
+            className={`text-sm font-semibold py-2 text-left transition cursor-pointer flex items-center gap-2 ${
+              activeTab === 'account' ? 'text-white pl-2 border-l-2 border-maroon font-bold' : 'text-neutral-400 hover:text-white'
+            }`}
+          >
+            <User className="w-4 h-4 text-maroon" />
+            My Account
+          </button>
         </nav>
 
         <div className="mt-auto pb-8 pt-6 border-t border-neutral-800">
           {user ? (
-            <button
-              onClick={signOut}
-              className="w-full flex items-center justify-center gap-2 bg-neutral-800 text-red-400 font-bold text-xs py-3 rounded-lg border border-neutral-700 uppercase cursor-pointer"
-            >
-              <LogOut className="w-4 h-4" /> Sign Out
-            </button>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-neutral-800/60 border border-neutral-700/60">
+                <div className="w-7 h-7 rounded-full bg-maroon text-white flex items-center justify-center font-bold text-xs shrink-0">
+                  {profile?.full_name ? profile.full_name[0].toUpperCase() : user.email[0].toUpperCase()}
+                </div>
+                <div className="overflow-hidden">
+                  <p className="text-xs font-bold text-white truncate">
+                    {profile?.full_name || 'Innovator'}
+                  </p>
+                  <p className="text-[10px] text-neutral-400 truncate">{user.email}</p>
+                </div>
+              </div>
+
+              <button
+                onClick={signOut}
+                className="w-full flex items-center justify-center gap-2 bg-neutral-800 text-red-400 font-bold text-xs py-2.5 rounded-lg border border-neutral-700 uppercase hover:bg-neutral-700/50 transition cursor-pointer"
+              >
+                <LogOut className="w-4 h-4" /> Sign Out
+              </button>
+            </div>
           ) : (
             <button
               onClick={signInWithGoogle}
