@@ -15,7 +15,7 @@ const TAB_ROUTES = {
   '/directory': 'directory',
   '/teams': 'teams',
   '/sih': 'sih',
-  '/comps': 'comps',
+  '/competitions': 'comps',
   '/account': 'account',
   '/aavishkar': 'aavishkar',
 };
@@ -30,17 +30,18 @@ export default function App() {
   });
 
   
-  const setActiveTab = (tab) => {
+const setActiveTab = (tab) => {
     setActiveTabState(tab);
     localStorage.setItem('ric_active_tab', tab);
 
    
-    const path = tab === 'home' ? '/home' : `/${tab}`;
+    let path = Object.keys(TAB_ROUTES).find((key) => key !== '/' && TAB_ROUTES[key] === tab) || `/${tab}`;
+    if (tab === 'home') path = '/home';
+
     if (window.location.pathname !== path || window.location.hash) {
       window.history.pushState({ tab }, '', path);
     }
   };
-
 
   useEffect(() => {
     const rawPath = window.location.pathname.toLowerCase().replace(/\/$/, '') || '/';
