@@ -395,51 +395,116 @@ export const TeamsPage = ({ setActiveTab }) => {
                   </div>
 
                   {filteredSih.length === 0 ? (
-                    <p className="text-xs text-neutral-500 italic py-4">No matching SIH submissions found.</p>
+                    <p className="text-xs text-neutral-500 italic py-4">
+                      No matching SIH submissions found.
+                    </p>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {filteredSih.map((team, idx) => {
-                        const teamName = team.team_name || team.teamDetails?.teamName;
-                        const dept = team.department || team.teamDetails?.department;
-                        const edition = team.edition || team.teamDetails?.edition || 'Software';
-                        const members = team.sih_members || team.members || [];
+                        const teamName =
+                          team.team_name || team.teamDetails?.teamName;
+
+                        const dept =
+                          team.department || team.teamDetails?.department;
+
+                        const edition =
+                          team.edition ||
+                          team.teamDetails?.edition ||
+                          'Software';
+
+                        const members =
+                          team.sih_members || team.members || [];
 
                         return (
                           <div
                             key={team.id || idx}
-                            className="bg-white rounded-2xl p-6 border border-neutral-200 shadow-xs hover:shadow-md transition flex flex-col justify-between"
+                            className="
+                bg-white rounded-2xl p-6
+                border border-neutral-200/90
+                shadow-sm
+                hover:shadow-md hover:-translate-y-0.5
+                transition-all duration-200
+                flex flex-col justify-between
+                relative overflow-hidden
+              "
                           >
                             <div>
-                              <div className="flex items-start justify-between gap-2 mb-3">
-                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-green-50 text-green-700 border border-green-200 uppercase tracking-wide">
-                                  Verified 6/6
+                              {/* Top Badges */}
+                              <div className="flex items-center justify-between gap-2 mb-3">
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-50 text-green-700 border border-green-200 uppercase tracking-wide">
+                                  ✓ Verified 6/6
                                 </span>
-                                <span className="text-[10px] font-semibold text-neutral-500 uppercase">
+
+                                <span className="text-[10px] font-semibold text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded-full border border-neutral-200/80">
                                   {edition} Track
                                 </span>
                               </div>
 
-                              <h3 className="font-extrabold text-base text-neutral-900 mb-1">{teamName}</h3>
-                              <p className="text-xs font-medium text-maroon mb-4">{dept}</p>
+                              {/* Team Name */}
+                              <div className="mb-3">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-maroon block mb-0.5">
+                                  Team
+                                </span>
 
+                                <h3 className="font-extrabold text-base text-neutral-900 leading-snug">
+                                  {teamName || 'Unnamed Team'}
+                                </h3>
+
+                                {dept && (
+                                  <p className="text-xs font-medium text-maroon mt-1">
+                                    {dept}
+                                  </p>
+                                )}
+                              </div>
+
+                              {/* Team Members */}
                               <div className="pt-3 border-t border-neutral-100">
-                                <span className="text-[11px] font-bold text-neutral-700 block mb-2">Team Members:</span>
-                                <ul className="space-y-1">
+                                <span className="text-[11px] font-bold text-neutral-700 block mb-2">
+                                  Team Members
+                                </span>
+
+                                <ul className="space-y-2">
                                   {members.map((m, mIdx) => (
-                                    <li key={mIdx} className="text-xs text-neutral-600 flex items-center justify-between">
-                                      <span className="truncate max-w-[170px]">
-                                        {mIdx + 1}. {m.name} {m.is_leader ? '👑' : ''}
+                                    <li
+                                      key={mIdx}
+                                      className="flex items-start gap-2"
+                                    >
+                                      {/* Number */}
+                                      <span className="text-[10px] font-bold text-neutral-400 mt-0.5 w-4 shrink-0">
+                                        {String(mIdx + 1).padStart(2, '0')}
                                       </span>
-                                      <span className="text-[10px] text-neutral-400 shrink-0">{m.branch || m.year}</span>
+
+                                      {/* Member Details */}
+                                      <div className="min-w-0">
+                                        <div className="text-xs font-semibold text-neutral-800 truncate">
+                                          {m.name || 'Unknown'}
+
+                                          {m.is_leader && (
+                                            <span className="ml-1.5 text-[9px] font-bold text-amber-700">
+                                              · LEAD
+                                            </span>
+                                          )}
+                                        </div>
+
+                                        <div className="text-[10px] text-neutral-400 mt-0.5 truncate">
+                                          {m.branch || m.year || 'Details unavailable'}
+                                        </div>
+                                      </div>
                                     </li>
                                   ))}
                                 </ul>
                               </div>
                             </div>
 
-                            <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center justify-between text-[11px] text-neutral-400">
-                              <span>Roster Locked</span>
-                              <span className="text-neutral-500 font-semibold">SIH 2026</span>
+                            {/* Footer */}
+                            <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center justify-between text-[11px]">
+                              <span className="text-neutral-400">
+                                Roster Locked
+                              </span>
+
+                              <span className="text-neutral-600 font-semibold bg-neutral-50 border border-neutral-200 px-2.5 py-1 rounded-md">
+                                · SIH 2026
+                              </span>
                             </div>
                           </div>
                         );
@@ -448,6 +513,7 @@ export const TeamsPage = ({ setActiveTab }) => {
                   )}
                 </div>
               )}
+
 
               {/* Aavishkar Section */}
               {(competitionFilter === 'all' || competitionFilter === 'aavishkar') && (
@@ -460,12 +526,12 @@ export const TeamsPage = ({ setActiveTab }) => {
                   </div>
 
                   {filteredAavishkar.length === 0 ? (
-                    <p className="text-xs text-neutral-500 italic py-4">No matching Aavishkar submissions found.</p>
+                    <p className="text-xs text-neutral-500 italic py-4">
+                      No matching Aavishkar submissions found.
+                    </p>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {/* below to this  */}
                       {filteredAavishkar.map((team, idx) => {
-                        const title = team.project_title || team.projectTitle;
                         const theme = team.theme;
                         const level = team.level;
                         const members = Array.isArray(team.members) ? team.members : [];
@@ -473,43 +539,72 @@ export const TeamsPage = ({ setActiveTab }) => {
                         return (
                           <div
                             key={team.id || idx}
-                            className="bg-white rounded-2xl p-6 border border-neutral-200 shadow-xs hover:shadow-md transition flex flex-col justify-between"
+                            className="bg-white rounded-2xl p-6 border border-neutral-200/90 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col justify-between relative overflow-hidden"
                           >
                             <div>
-                              <div className="flex items-start justify-between gap-2 mb-3">
-                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 uppercase tracking-wide shrink-0">
-                                  {members.length} Presenters
-                                </span>
-                                <span className="text-[11px] font-semibold text-neutral-600 text-right leading-tight">
-                                  {theme}
+                              {/* Presenter Count */}
+                              <div className="flex items-center mb-3">
+                                <span className="text-[10px] font-semibold text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded-full border border-neutral-200/80">
+                                  {members.length}{' '}
+                                  {members.length === 1 ? 'Presenter' : 'Presenters'}
                                 </span>
                               </div>
 
-                              <h3 className="font-extrabold text-base text-neutral-900 mb-1 leading-snug">{title}</h3>
-                              <p className="text-xs font-semibold text-amber-700 mb-4 flex items-center gap-1">
-                                <GraduationCap className="w-3.5 h-3.5" /> {level}
-                              </p>
-                              {/* Member list section with standard academic naming */}
+                              {/* Theme */}
+                              <div className="mb-3">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 block mb-0.5">
+                                  Category / Theme
+                                </span>
+                                <h3 className="font-extrabold text-base text-neutral-900 leading-snug">
+                                  {theme || 'General Innovation'}
+                                </h3>
+                              </div>
+
+                              {/* Academic Level */}
+                              <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-600 mb-4 bg-neutral-50 p-2 rounded-xl border border-neutral-100">
+                                <GraduationCap className="w-4 h-4 text-amber-600 shrink-0" />
+                                <span className="truncate">
+                                  {level || 'Not specified'}
+                                </span>
+                              </div>
+
+                              {/* Team Members */}
                               <div className="pt-3 border-t border-neutral-100">
-                                <span className="text-[11px] font-bold text-neutral-700 block mb-2">Team Members:</span>
-                                <ul className="space-y-1.5">
+                                <span className="text-[11px] font-bold text-neutral-700 block mb-2">
+                                  Team Members
+                                </span>
+                                <ul className="space-y-2">
                                   {members.map((m, mIdx) => (
-                                    <li key={mIdx} className="text-xs text-neutral-600 flex items-center justify-between">
-                                      <span className="truncate max-w-[170px]">
-                                        {mIdx + 1}. {m.name} {mIdx === 0 ? '(Lead)' : ''}
+                                    <li key={mIdx} className="flex items-start gap-2">
+                                      <span className="text-[10px] font-bold text-neutral-400 mt-0.5 w-4 shrink-0">
+                                        {String(mIdx + 1).padStart(2, '0')}
                                       </span>
-                                      <span className="text-[10px] text-neutral-400 shrink-0">
-                                        {m.branch} ({m.year})
-                                      </span>
+                                      <div className="min-w-0">
+                                        <div className="text-xs font-semibold text-neutral-800 truncate">
+                                          {m.name || 'Unknown'}
+                                          {mIdx === 0 && (
+                                            <span className="ml-1.5 text-[9px] font-bold text-amber-700">
+                                              · LEAD
+                                            </span>
+                                          )}
+                                        </div>
+                                        <div className="text-[10px] text-neutral-400 mt-0.5 truncate">
+                                          {m.branch || 'Branch not specified'}
+                                          {m.year ? ` · ${m.year}` : ''}
+                                        </div>
+                                      </div>
                                     </li>
                                   ))}
                                 </ul>
                               </div>
                             </div>
 
-                            <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center justify-between text-[11px] text-neutral-400">
-                              <span>College Level</span>
-                              <span className="text-amber-700 font-semibold">Aavishkar 2026</span>
+                            {/* Footer */}
+                            <div className="mt-5 pt-3 border-t border-neutral-100 flex items-center justify-between text-[11px]">
+                              <span className="text-neutral-400">Competition</span>
+                              <span className="text-amber-800 font-bold bg-amber-50 border border-amber-200/60 px-2.5 py-1 rounded-md">
+                                Aavishkar 2026
+                              </span>
                             </div>
                           </div>
                         );

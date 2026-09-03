@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { UserCheck, Users, FileText, ArrowRight } from 'lucide-react';
+import { UserCheck, Users, FileText, ArrowRight, X } from 'lucide-react';
 
 const defaultSlides = ['/assets/a.jpg', '/assets/b.jpg'];
 
@@ -9,8 +9,40 @@ const slideGlob = import.meta.glob('/src/assets/slideshow/*.{jpg,jpeg,png,webp}'
 export const HomePage = ({ setActiveTab }) => {
   const [slides, setSlides] = useState(defaultSlides);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showPosterModal, setShowPosterModal] = useState(false);
+  const [animateIn, setAnimateIn] = useState(false);
 
-  // 1. Resolve slideshow images asynchronously in the background
+  // Trigger modal on first mount with smooth CSS transitions
+  useEffect(() => {
+    const hasDismissed = sessionStorage.getItem('dismissed_aavishkar_popup');
+    if (!hasDismissed) {
+      const openTimer = setTimeout(() => {
+        setShowPosterModal(true);
+        requestAnimationFrame(() => {
+          setTimeout(() => setAnimateIn(true), 50);
+        });
+      }, 400);
+
+      return () => clearTimeout(openTimer);
+    }
+  }, []);
+
+  const handleDismissModal = () => {
+    setAnimateIn(false);
+    setTimeout(() => {
+      setShowPosterModal(false);
+      sessionStorage.setItem('dismissed_aavishkar_popup', 'true');
+    }, 200);
+  };
+
+  const handleGoToAavishkar = () => {
+    handleDismissModal();
+    if (setActiveTab) {
+      setActiveTab('aavishkar');
+    }
+  };
+
+  // Resolve slideshow images asynchronously in background
   useEffect(() => {
     const loadSlides = async () => {
       const globKeys = Object.keys(slideGlob);
@@ -32,7 +64,7 @@ export const HomePage = ({ setActiveTab }) => {
     loadSlides();
   }, []);
 
-  // 2. Carousel rotation interval
+  // Carousel rotation interval
   useEffect(() => {
     if (slides.length <= 1) return;
     const timer = setInterval(() => {
@@ -75,11 +107,68 @@ export const HomePage = ({ setActiveTab }) => {
   ];
 
   return (
-    <div className="w-full overflow-x-hidden">
+    <div className="w-full overflow-x-hidden relative">
+      {/* Aavishkar Announcement Modal */}
+      {showPosterModal && (
+        <div
+          className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-xs transition-opacity duration-300 ease-out ${
+            animateIn ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          {/* Backdrop dismissal */}
+          <div className="fixed inset-0" onClick={handleDismissModal} />
+
+          {/* Modal Card */}
+          <div
+            className={`relative flex flex-col max-h-[88vh] w-auto overflow-hidden rounded-2xl bg-white shadow-2xl border border-neutral-200 transition-all duration-300 ease-out transform ${
+              animateIn
+                ? 'opacity-100 scale-100 translate-y-0'
+                : 'opacity-0 scale-95 translate-y-4'
+            }`}
+          >
+            {/* Top Close Button */}
+            <button
+              onClick={handleDismissModal}
+              aria-label="Close Announcement"
+              className="absolute top-3 right-3 z-20 bg-black/60 hover:bg-black/90 text-white rounded-full p-1.5 backdrop-blur-md transition cursor-pointer shadow-md"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Poster Container */}
+            <div className="flex-1 min-h-0 flex items-center justify-center bg-neutral-900 overflow-hidden">
+              <img
+                src="/aavishkar-poster.jpg"
+                alt="Aavishkar 2026 Announcement"
+                onError={(e) => {
+                  e.target.src = '/Aavishkar.jpg';
+                }}
+                className="max-h-[calc(88vh-55px)] w-auto object-contain block select-none"
+              />
+            </div>
+
+            {/* Modal Bottom Action Bar */}
+            <div className="p-2.5 sm:p-3 bg-white border-t border-neutral-200 flex items-center justify-between gap-3 shrink-0">
+              <button
+                onClick={handleDismissModal}
+                className="text-xs font-semibold text-neutral-500 hover:text-neutral-800 px-2 py-1.5 cursor-pointer transition"
+              >
+                Dismiss
+              </button>
+              <button
+                onClick={handleGoToAavishkar}
+                className="flex items-center gap-1.5 bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl transition shadow cursor-pointer"
+              >
+                Go to Aavishkar Portal
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Full-Viewport Hero */}
       <section className="relative w-full min-h-[calc(100vh-140px)] lg:min-h-screen flex flex-col justify-center items-center text-center bg-neutral-950 px-4 pt-4 pb-10 sm:py-16">
-        
-        {/* Background Image Slideshow */}
         <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
           {slides.map((src, index) => (
             <img
@@ -99,7 +188,6 @@ export const HomePage = ({ setActiveTab }) => {
           <div className="absolute inset-0 bg-black/75 z-10" />
         </div>
 
-        {/* Foreground Content */}
         <div className="relative z-20 px-4 max-w-4xl mx-auto flex flex-col items-center justify-center space-y-4 sm:space-y-6">
           <h2 className="text-3xl sm:text-5xl md:text-7xl font-black text-white tracking-tight drop-shadow-2xl font-poppins leading-tight">
             Collaborate. Innovate. Dominate.
@@ -108,20 +196,31 @@ export const HomePage = ({ setActiveTab }) => {
             The central hub for hackathon squads, innovator matchmaking, and internal SIH team registrations.
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-3 pt-2 sm:pt-4 w-full sm:w-auto">
-            <button
-              onClick={() => setActiveTab('sih')}
-              className="w-full sm:w-auto bg-maroon text-white font-bold px-8 py-3 rounded-xl uppercase tracking-wider shadow-xl hover:bg-maroon-dark transition cursor-pointer text-xs sm:text-sm"
-            >
-              SIH 2026 Portal
-            </button>
-            <button
-              onClick={() => setActiveTab('directory')}
-              className="w-full sm:w-auto bg-white/10 text-white border border-white/60 font-bold px-8 py-3 rounded-xl uppercase tracking-wider shadow-xl hover:bg-white/20 transition backdrop-blur-xs cursor-pointer text-xs sm:text-sm"
-            >
-              Find Innovators
-            </button>
-          </div>
+        <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-3 pt-2 sm:pt-4 w-full sm:w-auto">
+  {/* SIH Portal - Maroon Glass */}
+  <button
+    onClick={() => setActiveTab('sih')}
+    className="w-full sm:w-auto bg-red-950/40 hover:bg-red-900/50 text-red-200 hover:text-white border border-red-500/30 hover:border-red-400/60 font-bold px-7 py-3 rounded-xl uppercase tracking-wider shadow-lg hover:shadow-red-950/30 backdrop-blur-md transition-all cursor-pointer text-xs sm:text-sm"
+  >
+    SIH 2026 Portal
+  </button>
+
+  {/* Aavishkar Portal - Amber Glass */}
+  <button
+    onClick={() => setActiveTab('aavishkar')}
+    className="w-full sm:w-auto bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 hover:text-white border border-amber-400/40 hover:border-amber-400/70 font-bold px-7 py-3 rounded-xl uppercase tracking-wider shadow-lg hover:shadow-amber-500/20 backdrop-blur-md transition-all cursor-pointer text-xs sm:text-sm"
+  >
+    Aavishkar 2026 Portal
+  </button>
+
+  {/* Find Innovators - Neutral Glass */}
+  <button
+    onClick={() => setActiveTab('directory')}
+    className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border border-white/40 hover:border-white/60 font-bold px-7 py-3 rounded-xl uppercase tracking-wider shadow-xl backdrop-blur-md transition-all cursor-pointer text-xs sm:text-sm"
+  >
+    Find Innovators
+  </button>
+</div>
         </div>
       </section>
 
@@ -154,7 +253,7 @@ export const HomePage = ({ setActiveTab }) => {
         </div>
       </section>
 
-      {/* Hall of Achievements Carousel */}
+      {/* Hall of Achievements */}
       <section className="bg-[#fffdfb] w-full pt-12 pb-20 overflow-hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="border-b border-neutral-200 pb-3 mb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
