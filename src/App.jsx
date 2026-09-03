@@ -10,6 +10,7 @@ import { AccountPage } from './pages/AccountPage';
 import { AavishkarPortal } from './pages/AavishkarPortal';
 
 const TAB_ROUTES = {
+  '/home': 'home',
   '/': 'home',
   '/directory': 'directory',
   '/teams': 'teams',
@@ -20,7 +21,6 @@ const TAB_ROUTES = {
 };
 
 export default function App() {
-  // Read path on initial load (falls back to saved tab or 'home')
   const [activeTab, setActiveTabState] = useState(() => {
     const rawPath = window.location.pathname.toLowerCase().replace(/\/$/, '') || '/';
     if (TAB_ROUTES[rawPath]) {
@@ -29,18 +29,26 @@ export default function App() {
     return localStorage.getItem('ric_active_tab') || 'home';
   });
 
-  // Switch tab, update URL without reloading, and persist to storage
+  
   const setActiveTab = (tab) => {
     setActiveTabState(tab);
     localStorage.setItem('ric_active_tab', tab);
 
-    const path = Object.keys(TAB_ROUTES).find((key) => TAB_ROUTES[key] === tab) || '/';
+   
+    const path = tab === 'home' ? '/home' : `/${tab}`;
     if (window.location.pathname !== path || window.location.hash) {
       window.history.pushState({ tab }, '', path);
     }
   };
 
-  // Sync state if user clicks Browser Back/Forward buttons
+
+  useEffect(() => {
+    const rawPath = window.location.pathname.toLowerCase().replace(/\/$/, '') || '/';
+    if (rawPath === '/' || rawPath === '') {
+      window.history.replaceState({ tab: 'home' }, '', '/home');
+    }
+  }, []);
+
   useEffect(() => {
     const handlePopState = () => {
       const rawPath = window.location.pathname.toLowerCase().replace(/\/$/, '') || '/';
@@ -52,6 +60,7 @@ export default function App() {
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
+
 
   return (
     <AuthProvider>
