@@ -9,16 +9,49 @@ import { HackathonPage } from './pages/HackathonPage';
 import { AccountPage } from './pages/AccountPage';
 import { AavishkarPortal } from './pages/AavishkarPortal';
 
+const TAB_ROUTES = {
+  '/': 'home',
+  '/directory': 'directory',
+  '/teams': 'teams',
+  '/sih': 'sih',
+  '/comps': 'comps',
+  '/account': 'account',
+  '/aavishkar': 'aavishkar',
+};
+
 export default function App() {
-  // Initialize state from localStorage (defaults to 'home' on first visit)
-  const [activeTab, setActiveTab] = useState(() => {
+  // Read path on initial load (falls back to saved tab or 'home')
+  const [activeTab, setActiveTabState] = useState(() => {
+    const rawPath = window.location.pathname.toLowerCase().replace(/\/$/, '') || '/';
+    if (TAB_ROUTES[rawPath]) {
+      return TAB_ROUTES[rawPath];
+    }
     return localStorage.getItem('ric_active_tab') || 'home';
   });
 
-  // Sync tab selection changes with localStorage
+  // Switch tab, update URL without reloading, and persist to storage
+  const setActiveTab = (tab) => {
+    setActiveTabState(tab);
+    localStorage.setItem('ric_active_tab', tab);
+
+    const path = Object.keys(TAB_ROUTES).find((key) => TAB_ROUTES[key] === tab) || '/';
+    if (window.location.pathname !== path || window.location.hash) {
+      window.history.pushState({ tab }, '', path);
+    }
+  };
+
+  // Sync state if user clicks Browser Back/Forward buttons
   useEffect(() => {
-    localStorage.setItem('ric_active_tab', activeTab);
-  }, [activeTab]);
+    const handlePopState = () => {
+      const rawPath = window.location.pathname.toLowerCase().replace(/\/$/, '') || '/';
+      const matchedTab = TAB_ROUTES[rawPath] || 'home';
+      setActiveTabState(matchedTab);
+      localStorage.setItem('ric_active_tab', matchedTab);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   return (
     <AuthProvider>
